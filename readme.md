@@ -56,3 +56,52 @@ A função nativa `isset()`, por sua vez, verifica se determinado índice de um 
 A lógica da mensagem de erro na autenticação do usuário foram inseridas no arquivo index.php, utilizando tags curtas, para tornar a leitura mais amigável. Inclusive, o bloco HTML é inserido ENTRE as tags curtas, sendo executado apenas em caso de true (usuário inválido).
 
 ## Aula 04: Protegendo páginas restritas com SESSION. 🔐
+
+A função é proteger algumas páginas (ou rotas) de serem acessadas via requisição HTTP! A ideia é que o acesso passe por um processo de autenticação.
+
+A `Sessão` é um recurso que faz com que uma instância do browser, a partir de um identificador único, tenha condições de acessar uma determinada seção (espaço de memória) no lado do servidor. Ou seja, cria-se uma ponte (através de cookie ou URL). Pode ser usada dentro de qualquer script!
+
+É incluída a instrução `session_start();` no início do script, antes de qualquer outra instrução que emita pro navegador uma saída (output de dados, como echo)!!! O comando session_start() inicia uma nova sessão ou resume uma sessão existente.
+
+A superglobal `$_SESSION` (variáveis de sessão) consiste em um  array associativo contendo variáveis de sessão disponíveis para o atual script. Por tratar-se de uma 'superglobal' (ou variável global automática), está disponível em todos escopos pelo script. 
+
+Por default, cada sessão em PHP dura 3 horas (podemos fechar o navegador e abrir novamente, com a sessão ainda ativa, pois o cookie ainda estará presente).
+
+O compartilhamento de variáveis entre scripts permite, por exemplo, criar uma variável de controle no processo de autenticação, passível de ser acessada pelos demais scripts, com o objetivo de decidir se aquele determinado script deve ou não ser retornado em função do resultado do processo de autenticação.
+
+No arquivo `valida_login.php`, verificando se foi autenticado:
+
+~~~php
+if ($usuario_autenticado) {
+  echo 'Usuário autenticado';
+  $_SESSION['autenticado'] = 'SIM';
+} else {
+  $_SESSION['autenticado'] = 'NAO';
+  header('Location: ./index.php?login=erro');
+}
+~~~
+
+E, em cada um dos demais scripts, redirecionando para o index (indicando erro) caso o usuário não seja autenticado:
+
+~~~php
+session_start();
+
+if (!isset($_SESSION['autenticado'])|| $_SESSION['autenticado'] != 'SIM') {
+  header('Location: ./index.php?login=erro2');
+  echo $_SESSION['autenticado'];
+}
+~~~
+
+E, por fim, imprimindo a mensagem de erro2 no arquivo index.php:
+
+~~~php
+<?php if(isset($_GET['login']) && $_GET['login'] == 'erro2'){?>
+
+<div class="text-danger">
+  Faça login antes de acessar as páginas protegidas!
+</div>
+
+<?php } ?>
+~~~
+
+## Aula 05: Incorporando scripts com include, include_once e require_once.
