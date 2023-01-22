@@ -122,7 +122,7 @@ Nesta aula, o objetivo é aprender a incorporar scripts dentro de outros scripts
 
 Os 4 construtores do PHP são:
 
-1. include: 
+### 1. include: 
 
 Traz o conteúdo do script em que nos encontramos, bem como o conteúdo daquele que foi incorporado.
 
@@ -134,7 +134,7 @@ Podemos também omitir os parentes na sintaxe, em qualquer um dos construtores.
 
 Quando o include produz um erro no processo de inclusão de script (como no caso de não localizar o script que queremos adicionar), ele gera um warning (apenas um alerta, não afetando o processamento do script).
 
-2. include_once: 
+### 2. include_once: 
 
 Permite a inclusão de um script apenas uma vez!
 
@@ -142,7 +142,7 @@ Permite a inclusão de um script apenas uma vez!
 include_once 'menu.php';
 ~~~
 
-3. require:
+### 3. require:
 
 Quando o require produz um erro no processo de inclusão de script (como no caso de não localizar o script que queremos add), ele gera um fatal error (interrompendo completamente o funcionamento do script).
 
@@ -150,7 +150,7 @@ Quando o require produz um erro no processo de inclusão de script (como no caso
 require('menu2.php'); 
 ~~~
 
-4. require_once:
+### 4. require_once:
 
 Permite a inclusão de um script apenas uma vez!
 
@@ -158,4 +158,16 @@ Permite a inclusão de um script apenas uma vez!
 require_once 'menu.php';
 ~~~
 
-## Aula 06: Refactoring do projeto com require_once.
+## Aula 06: Refactoring do projeto com require_once. 🧩
+
+Refatorando com o objetivo de isolar a lógica de validação de acesso para aproveitar essa lógica nas páginas que serão protegidas.
+
+Para tal finalidade, inserido no início dos scripts `home.php`, `abrir_chamado.php` e `consultar_chamado.php` o seguinte comando:
+
+~~~php
+require_once './validador_acesso.php'; 
+~~~
+
+Optou-se pelo require_once pois o desejado nesse caso é que, em caso de qualquer problema na recuperação do script, ocorra um fatal error, evitando abertura de brechas (já que a validação é crucial).
+
+## Aula 07: Navegação entre páginas. 
