@@ -55,6 +55,16 @@ A função nativa `isset()`, por sua vez, verifica se determinado índice de um 
 
 A lógica da mensagem de erro na autenticação do usuário foram inseridas no arquivo index.php, utilizando tags curtas, para tornar a leitura mais amigável. Inclusive, o bloco HTML é inserido ENTRE as tags curtas, sendo executado apenas em caso de true (usuário inválido).
 
+~~~php
+<?php if(isset($_GET['login']) && $_GET['login'] == 'erro'){?>
+
+<div class="text-danger">
+  Usuário ou senha inválido(s)!
+</div>
+
+<?php } ?>
+~~~
+
 ## Aula 04: Protegendo páginas restritas com SESSION. 🔐
 
 A função é proteger algumas páginas (ou rotas) de serem acessadas via requisição HTTP! A ideia é que o acesso passe por um processo de autenticação.
@@ -104,4 +114,48 @@ E, por fim, imprimindo a mensagem de erro2 no arquivo index.php:
 <?php } ?>
 ~~~
 
-## Aula 05: Incorporando scripts com include, include_once e require_once.
+## Aula 05: Incorporando scripts com include, include_once, require e require_once. 💡
+
+Nesta aula, o objetivo é aprender a incorporar scripts dentro de outros scripts, a fim de evitar redundância de código dentro das aplicações.
+
+> criação do diretório incorporando_scripts, para estudo do assunto!
+
+Os 4 construtores do PHP são:
+
+1. include: 
+
+Traz o conteúdo do script em que nos encontramos, bem como o conteúdo daquele que foi incorporado.
+
+~~~php
+include('menu.php');
+~~~
+
+Podemos também omitir os parentes na sintaxe, em qualquer um dos construtores.
+
+Quando o include produz um erro no processo de inclusão de script (como no caso de não localizar o script que queremos adicionar), ele gera um warning (apenas um alerta, não afetando o processamento do script).
+
+2. include_once: 
+
+Permite a inclusão de um script apenas uma vez!
+
+~~~php
+include_once 'menu.php';
+~~~
+
+3. require:
+
+Quando o require produz um erro no processo de inclusão de script (como no caso de não localizar o script que queremos add), ele gera um fatal error (interrompendo completamente o funcionamento do script).
+
+~~~php
+require('menu2.php'); 
+~~~
+
+4. require_once:
+
+Permite a inclusão de um script apenas uma vez!
+
+~~~php
+require_once 'menu.php';
+~~~
+
+## Aula 06: Refactoring do projeto com require_once.
