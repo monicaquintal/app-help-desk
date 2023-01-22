@@ -170,4 +170,8 @@ require_once './validador_acesso.php';
 
 Optou-se pelo require_once pois o desejado nesse caso é que, em caso de qualquer problema na recuperação do script, ocorra um fatal error, evitando abertura de brechas (já que a validação é crucial).
 
-## Aula 07: Navegação entre páginas. 
+## Aula 07: Navegação entre páginas. ⛵
+
+Em caso de usuário autenticado, o script valida_login.php irá redirecionar para o arquivo home.php. Além disso, foi incluída a navegação dos links/botões.
+
+## Aula 08: Encerrando a sessão (logoff). ❌
