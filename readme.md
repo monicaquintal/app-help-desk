@@ -175,3 +175,36 @@ Optou-se pelo require_once pois o desejado nesse caso é que, em caso de qualque
 Em caso de usuário autenticado, o script valida_login.php irá redirecionar para o arquivo home.php. Além disso, foi incluída a navegação dos links/botões.
 
 ## Aula 08: Encerrando a sessão (logoff). ❌
+
+A intenção dessa aula é aprender a remover ou destruir variáveis, a fim de implementar recursos como logoff (sair intencionalmente da sessão). Há duas possibilidades:
+
+### 1. remover índices do array de sessão:
+
+Utilizar a função nativa `unset(<array>, <índice>)`. Essa função não é exclusiva para a superglobal $_SESSION, podendo ser utilizada para excluir índices de qualquer array, incuindo get e post.
+
+Exemplo:
+
+~~~php
+unset($_SESSION['x']);
+~~~
+
+Tem inteligência para remover o índice *apenas* se este existir.
+
+### 2. destruir a variável de sessão (removendo todos os índices ao mesmo tempo):
+
+Utilizar a função específica `session_destroy()`, que remove todos os índices contidos na superglobal $_SESSION.
+
+~~~php
+session_destroy();
+~~~
+
+Nesse caso, a sessão será destruída, mas apenas numa próxima requisição é que não teremos acesso às variáveis de sessão. 
+
+Portanto, após o destroy, forçar um redirecionamento, para que seja necessária uma nova requisição HTTP, onde a sessão já não conterá os índices.
+
+~~~php
+session_destroy();
+header('Location: ./index.php');
+~~~
+
+## Aula 09: Registrando chamados. 📋

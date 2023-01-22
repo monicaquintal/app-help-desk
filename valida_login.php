@@ -3,7 +3,6 @@
 session_start();
 
 /*
-$_SESSION['x'] = 'Oi, eu sou um valor de sessão!';
 print_r($_SESSION);
 echo '<hr/>';
 print_r($_SESSION['y']);
@@ -40,7 +39,10 @@ foreach($usuarios_app as $user) {
 }
 
 if ($usuario_autenticado) {
+  echo "Usuário autenticado";
   $_SESSION['autenticado'] = 'SIM';
+  $_SESSION['x'] = 'um valor';
+  $_SESSION['y'] = 'outro valor';
   header('Location: ./home.php');
 } else {
   $_SESSION['autenticado'] = 'NAO';
