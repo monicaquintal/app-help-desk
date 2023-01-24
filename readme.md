@@ -276,3 +276,74 @@ Delimitar um caractere especial OU usar a constante `PHP_EOL`, que armazena o ca
 ### 6. Redirecionando a página:
 
 Após abertura do chamado, redirecionar para o script "abrir_chamado.php".
+
+
+## Aula 10: Consultando chamados. 🔍
+
+Como recuperar as informações do back-end e apresentá-las no front-end? Ou seja, implementaremos a tela `consultar_chamado.php`.
+
+Inicialmente, utilizar a função `fopen();` para abrir o arquivo hd. Porém, desta vez utilizaremos o parâmetro **'r'**, o qual executará apenas a leitura do arquivo.
+
+Na sequência, percorrer cada uma das linhas do arquivo, recuperando os registros. Para isso, utilizar uma estrutura de repetição - nesse caso, o while.
+
+A função `feof()` testa pelo fim de um arquivo; ou seja, percorre o arquivo, recuperando cada uma de suas linhas, até que identifique o fim do arquivo (end of file). Lembrar de utilizar o **operador de negação** para que entremos no laço ('not' feof => entra no laço).
+
+Lembrar de fechar o arquivo após manipulação/leitura!
+
+Exemplo:
+
+~~~php
+// abrir o arquivo .hd
+$arquivo = fopen('arquivo.hd', 'r');
+
+// percorrer cada uma das linhas do arquivo, recuperando os registros (enquanto houver registros - ou linhas - a serem recuperados)
+while(!feof($arquivo)) {
+  $registro = fgets($arquivo); // recupera o que há na linha; podemos estabelecer (ou ñ) um n° de bits a serem recuperados
+  echo $registro . '<br>';
+}
+
+//lembrar de fechar o arquivo após manipulação!
+fclose($arquivo);
+~~~
+
+Criar um array ($chamados) que conterá cada um dos $registros recuperados do arquivo .hd!
+
+Utilizar a estrutura `foreach()` para percorrer array (dentro do script consultar_chamado.php).
+
+A função nativa `explode()`, por sua vez, permitirá criar um novo array com base em um delimitador (no caso, o #)!
+
+Substitir os itens "título", "categoria" e "descrição" pelos respectivos índices do array após explode!
+
+Incluir a verificação se o array possui as informações necessárias para impressão (instrução continue, função count() e estrutura if/else).
+
+~~~php
+<?php
+foreach($chamados as $chamado) { 
+?>
+  
+<?php
+$chamado_dados = explode('#', $chamado);
+
+if(count($chamado_dados) < 3) {
+continue;
+}
+?>
+
+<div class="card mb-3 bg-light">
+  <div class="card-body">
+    <h5 class="card-title">
+      <?= $chamado_dados[0]; ?>
+    </h5>
+    <h6 class="card-subtitle mb-2 text-muted">
+      <?= $chamado_dados[1]; ?>
+    </h6>
+    <p class="card-text">
+      <?= $chamado_dados[2]; ?>
+    </p>
+  </div>
+</div>
+
+<?php }; ?>
+~~~
+
+## Aula 11: Aplicando controle de perfil de usuários. 👩‍💻
