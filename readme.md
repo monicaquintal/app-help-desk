@@ -208,3 +208,71 @@ header('Location: ./index.php');
 ~~~
 
 ## Aula 09: Registrando chamados. 📋
+
+Como ainda não estudamos Banco de Dados, para registrar os chamados no App, faremos através da criação de um **arquivo txt**.
+
+No arquivo `abrir_chamado.php`, definir o método de envio do formulário (no caso, $_POST) e action (destino para o qual será feito o submit do formulário quando o botão for clicado) que, neste caso, será `registra_chamado.php`.
+
+Lembrar de atribuir `name`s aos inputs, para que crie uma associação chave-valor, a ser encaminhada ao servidor!
+
+Criar o script **registra_chamado.php**, que recuperará os valores dos inputs.
+
+Para `criar o arquivo de texto`, há algumas funções nativas. A seguir, faremos:
+
+### 1. para abrir novo arquivo de texto:
+
+~~~php
+fopen('nome_do_arquivo.extensão', 'indicar_a_ação');
+~~~
+
+Dentre as ações possíveis: abrir arquivo, ler arquivo, posicionar cursor para escrita no início ou fim do arquivo, etc. Na [documentação](https://www.php.net/manual/en/function.fopen.php) podemos conferir as possibilidades de parâmetros a serem definidos!
+
+Neste caso usamos o 'a', que abre o arquivo.
+
+### 2. Para definir o que será escrito no arquivo:
+
+O post é um array (objeto); devemos formatá-lo em uma estrutura de texto que seja mais simples.
+
+Exemplo:
+
+~~~php
+// para garantir que qualquer # digitada pelo usuário seja substiuída, não gerando conflitos:
+$titulo = str_replace('#', '-', $_POST['titulo']);
+$categoria = str_replace('#', '-', $_POST['categoria']);
+$descricao = str_replace('#', '-', $_POST['descricao']);
+ 
+$texto = $titulo . '#' . $categoria . '#' . $descricao;
+
+echo $texto;
+~~~
+
+Outra possibilidade é o uso da função nativa `implode()`, que com base em determinado caracter, transforma um array em uma string.
+
+### 3. Escrevendo no arquivo de texto:
+
+Podemos utilizar outra função nativa, chamada `fwrite()`. Exemplo:
+
+~~~php
+fwrite('referência_do_arquivo_que_abrimos', 'o_que_queremos_escrever');
+~~~
+
+No projeto:
+
+~~~php
+fwrite($arquivo, $texto);
+~~~
+
+### 4. Para fechar o arquivo:
+Função nativa `fclose()`, como utilizada abaixo:
+
+~~~php
+fclose('referência_do_arquivo_aberto');
+~~~
+
+### 5. Delimitando chamados:
+
+Delimitar um caractere especial OU usar a constante `PHP_EOL`, que armazena o caractere de quebra de linha de acordo com o SO que o programa está rodando!
+
+### 6. Redirecionando a página:
+
+Após abertura do chamado, redirecionar para o script "abrir_chamado.php".
