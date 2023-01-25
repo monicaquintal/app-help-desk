@@ -18,7 +18,7 @@
 
     <nav class="navbar navbar-dark bg-dark">
       <a class="navbar-brand" href="#">
-        <img src="./assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="Logo ao App Help Desk">
+        <img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="Logo ao App Help Desk">
         App Help Desk
       </a>
     </nav>
