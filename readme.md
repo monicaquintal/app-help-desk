@@ -347,3 +347,133 @@ continue;
 ~~~
 
 ## Aula 11: Aplicando controle de perfil de usuários. 👩‍💻
+
+### Metas: 
+
+1. Criar dois perfis: 
+- perfil administrativo: qualquer usuário adm pode visualizar **todos** os chamados;
+- perfil do usuário: visualiza apenas seus próprios chamados.
+
+2. Incluir no chamado quem foi o usuário responsável por sua abertura!
+
+### Etapas:
+
+1. Inclusão dos novos logins e senhas no script `valida_login.php`.
+
+2. Definir ids para cada um dos usuários, no array $usuarios_app.
+
+~~~php
+$usuarios_app = array(
+  array('id' => 1, 'email' => 'adm@teste.com.br', 'senha' => '1234'),
+  array('id' => 2, 'email' => 'user@teste.com.br', 'senha' => '1234'),
+  array('id' => 3, 'email' => 'jose@teste.com.br', 'senha' => '1234'),
+  array('id' => 4, 'email' => 'maria@teste.com.br', 'senha' => '1234')
+);
+~~~
+
+3. Garantir que o id possa ser utilizado em qualquer ponto da lógica da aplicação. Para isso, criar a variável `$usuario_id`, que a princípio receberá o valor "null".
+
+~~~php
+$usuario_id = null;
+~~~
+
+4. Após a lógica de identificação do usuário, recuperar a variável $usuario_id e atribuir a ela o índice específico. 
+
+~~~php
+if ($user['email'] == $_POST['email'] && $user['senha'] == $_POST['senha']) {
+  $usuario_autenticado = true;
+  $usuario_id = $user['id'];
+}
+~~~
+
+5. Utilizar a superglobal `$_SESSION` para associar o valor do id ($usuario_id), disponibilizando essa informação no escopo global da aplicação.
+
+~~~php
+if ($usuario_autenticado) {
+  echo "Usuário autenticado";
+  $_SESSION['autenticado'] = 'SIM';
+  $_SESSION['id'] = $usuario_id;
+  header('Location: ./home.php');
+} else {
+  $_SESSION['autenticado'] = 'NAO';
+  header('Location: ./index.php?login=erro');
+}
+~~~
+
+6. No script `registra_chamado.php`, executar `session_start();` e incluir na variávei $texto a instrução $_SESSION['id'].
+
+~~~php
+session_start();
+<...>
+$texto = $_SESSION['id'] . '#' . $titulo . '#' . $categoria . '#' . $descricao . PHP_EOL;
+~~~
+
+7. No script `consultar_chamado.php`, rearrajar os índices nas áreas corretas dos cards (já que os índices mudaram quando incuímos o id).
+
+~~~php
+<div class="card mb-3 bg-light">
+  <div class="card-body">
+    <h5 class="card-title">
+      <?= $chamado_dados[1]; ?>
+    </h5>
+    <h6 class="card-subtitle mb-2 text-muted">
+      <?= $chamado_dados[2]; ?>
+    </h6>
+    <p class="card-text">
+      <?= $chamado_dados[3]; ?>
+    </p>
+  </div>
+</div>
+~~~
+
+8. Para **definir os perfis**, no script `valida_login.php`, criar um array chamado $perfis[], como abaixo:
+
+~~~php
+$perfis = array(1 => 'Administrativo', 2 => 'Usuário');
+
+// atribuindo mais um associativo (para os id, no caso)
+$usuarios_app = array(
+  array('id' => 1, 'email' => 'adm@teste.com.br', 'senha' => '1234', 'perfil_id' => 1),
+  array('id' => 2, 'email' => 'user@teste.com.br', 'senha' => '1234', 'perfil_id' => 1),
+  array('id' => 3, 'email' => 'jose@teste.com.br', 'senha' => '1234', 'perfil_id' => 2),
+  array('id' => 4, 'email' => 'maria@teste.com.br', 'senha' => '1234', 'perfil_id' => 2)
+);
+~~~
+
+9. Incluir o `$perfil_id` na superglobal $_SESSION.
+
+~~~php
+$usuario_perfil_id = null;
+<...>
+if ($user['email'] == $_POST['email'] && $user['senha'] == $_POST['senha']) {
+  $usuario_autenticado = true;
+  $usuario_id = $user['id'];
+  $usuario_perfil_id = $user['perfil_id'];
+}
+<...>
+if ($usuario_autenticado) {
+  echo "Usuário autenticado";
+  $_SESSION['autenticado'] = 'SIM';
+  $_SESSION['id'] = $usuario_id;
+  $_SESSION['perfil_id'] = $usuario_perfil_id;
+  header('Location: ./home.php');
+} else {
+  $_SESSION['autenticado'] = 'NAO';
+  header('Location: ./index.php?login=erro');
+}
+~~~
+
+10. Em `consultar_chamado.php`, implementar as regras de exibição dos chamados.
+
+~~~php
+$chamado_dados = explode('#', $chamado);
+// identificar se o perfil é administrativo ou usuário
+if($_SESSION['perfil_id'] == 2) {
+  // implementar controle de visualização
+  // só exibe chamado se foi criado pelo usuário!
+  if($_SESSION['id'] != $chamado_dados[0]) {
+    //significa que chamado foi aberto por outro usuário
+    continue; // para que o foreach desconsidere o restante das info.
+  }
+}
+~~~
