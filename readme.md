@@ -477,3 +477,43 @@ if($_SESSION['perfil_id'] == 2) {
   }
 }
 ~~~
+
+## Aula 12: Segurança no back-end de aplicações web. 🔑
+
+A fim de evitar vulnerabilidades na nossa aplicação, nessa aula foi abordada a segurança no back-end de aplicações web, a fim de evitar sua exposição (que informações sigilosas possam ser acessadas de forma indevida).
+
+Na prática, tudo que está no diretório público de um servidor HTTP está disponível para o mundo, o que é inadequado, pois há scripts que implementam regras de negócio que são sigilosas, que devem ser protegidos!
+
+O documento `arquivo.hd` e o repositório `valida_login.php` são arquivos que possuem informções sigilosas e detalhes de acesso, e estão expostos no script de forma hardcode.
+
+Portanto, para contornar a vulnerabilidade:
+
+### Para etirar os arquivos e scripts do diretório público do servidor HTTP:
+
+- acessar o Explorer do XAMPP, e no diretório C:, criar uma nova pasta, chamada "app_help_desk" (fora do diretório público htdocs).
+
+~~~
+C:/xampp
+  - app_help_desk 
+    // (será o diretório de arquivos e scripts sigilosos)
+  - htdocs/app_help_desk
+    // diretório público
+~~~
+
+- recortar os arquivos e script sigilosos (valida_login.php e arquivo.hd) e colá-los no diretório app_help_desk.
+
+- para que a aplicação tenha a inteligência de executar um código externo ao script, podem ser utilizados os comandos de inclusão, como `include`, `include_once`, `require` e `require_once`.
+
+- dentro de htdocs/app_help_desk, criar um novo arquivo chamado `valida_login.php` (NOVO, o antigo estará no diretório sigiloso).
+
+- neste novo arquivo `valida_login.php` , incluir:
+
+~~~php
+require "../../app_help_desk/valida_login.php";
+~~~
+
+- quanto ao arquivo `arquivo.hd`, este é utilziado nos scripts registra_chamado.php e consultar_chamado.php. Nestes casos, para ajustar a referência do arquivo:
+
+~~~php
+$arquivo = fopen('../../app_help_desk/arquivo.hd', 'r');
+~~~
